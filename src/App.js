@@ -57,7 +57,7 @@ function App() {
       {hasError ? <p>{errorMessage}</p> : null}
       {!isLoading ? (
         <ul>
-          {users.map(({ id, userId, title, body }) => (
+          {users.map(({ id, userId, title, body }) =>(
             <>
               <li key={id}>
                 <p>Title: {title}</p>
