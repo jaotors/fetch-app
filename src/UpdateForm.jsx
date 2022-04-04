@@ -1,30 +1,30 @@
 import React, { useState } from "react";
 
-const Form = ({ userId }) => {
+const UpdateForm = ({ id, userId }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const data = { userId, title, body };
-    fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
+    const data = { id, userId, title, body };
+
+    fetch("https://jsonplaceholder.typicode.com/posts/1", {
+      method: "PUT",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json",
+        "Content-type": "application/json; charset=UTF-8",
       },
-    }).then((response) => {
-      console.log(response);
-      alert("Form Submitted");
-      return response.json();
-    });
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json));
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <h3>Create Post</h3>
+        <h3>Update Resource</h3>
+        <div>id{id}</div>
         <div>userId {userId}</div>
         <div>
           <input
@@ -52,4 +52,4 @@ const Form = ({ userId }) => {
   );
 };
 
-export default Form;
+export default UpdateForm;

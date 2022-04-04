@@ -1,36 +1,39 @@
-import React, { useEffect, useState } from 'react'
-import Form from './Form'
-import './App.css'
+import React, { useEffect, useState } from "react";
+import Form from "./Form";
+import "./App.css";
+import UpdateForm from "./UpdateForm";
+import DeleteForm from "./DeleteForm";
 
 function App() {
-  const [users, setUsers] = useState([])
-  const [hasError, setHasError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
-  
+  const [users, setUsers] = useState([]);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUsers = () => {
-    fetch('https://jsonplaceholder.typicode.com/posts')
+    fetch("https://jsonplaceholder.typicode.com/posts")
       .then((response) => response.json())
       .then((result) => {
-        setUsers(result)
-        setIsLoading(false)
+        setUsers(result);
+        setIsLoading(false);
       })
       .catch((error) => {
-        setHasError(true)
-        setIsLoading(false)
-        setErrorMessage(error.message)
-      })
-  }
+        setHasError(true);
+        setIsLoading(false);
+        setErrorMessage(error.message);
+      });
+  };
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   return (
-    <div className='App'>
+    <div className="App">
       <h1>Random Users</h1>
       <Form userId={1} />
+      <UpdateForm userId={1} id={1} />
+      <DeleteForm />
       <br />
       <br />
       {hasError ? <p>{errorMessage}</p> : null}
@@ -50,7 +53,7 @@ function App() {
         <h3>loading...</h3>
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
