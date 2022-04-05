@@ -1,13 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-const Form = ({ userId }) => {
+const Form = ({ userId, ifEditData, onEditData, ifUpdate }) => {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    setTitle(ifUpdate.title)
+    setBody(ifUpdate.body)
+  }, [ifUpdate])
+  
+  function handleEdit(e) {
     e.preventDefault()
 
+    const editedData = {
+      id: ifUpdate.id,
+      userId: ifUpdate.userId,
+      title,
+      body
+    }
+
+    fetch(`https://jsonplaceholder.typicode.com/posts/${ifUpdate.userId}`, {
+      method: "PUT",
+      body: JSON.stringify(editedData),
+      headers: {
+        'Content-type': 'application/json'
+      },
+    }).then(res => {
+      return res.json()
+    }).then(data => {
+      console.log(data)
+      alert('Edit submitted')
+    })
+
+    e.target.reset()
+    reset()
+  }
+
+  
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    
     const data = { userId, title, body }
+    
     fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -19,12 +53,21 @@ const Form = ({ userId }) => {
       alert('Form Submitted')
       return response.json()
     })
+
+    e.target.reset()
+    reset()
+  }
+  
+  function reset() {
+    onEditData(false)
+    setTitle('')
+    setBody('')
   }
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <h3>Create Post</h3>
+      <form onSubmit={ifEditData ? handleEdit : handleSubmit}>
+        {ifEditData ? <h3>Edit Post</h3> : <h3>Create Post</h3>}
         <div>userId {userId}</div>
         <div>
           <input
@@ -33,6 +76,7 @@ const Form = ({ userId }) => {
             placeholder='Input Title'
             onChange={(e) => setTitle(e.target.value)}
             value={title}
+            required
           />
         </div>
         <div>
@@ -42,10 +86,12 @@ const Form = ({ userId }) => {
             onChange={(e) => setBody(e.target.value)}
             placeholder='Input Body'
             value={body}
+            required
           />
         </div>
         <div>
-          <button type='submit'>Submit</button>
+          <button type='submit'>{ifEditData ? 'Submit edit' : 'Submit'}</button>
+          <button type='reset' onClick={reset}>Reset</button>
         </div>
       </form>
     </div>
